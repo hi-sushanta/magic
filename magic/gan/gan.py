@@ -1,13 +1,8 @@
 
 import torch.nn as nn
-import torch.nn.functional as F
 import torch
 import os
-import numpy as np
-import math
-import torchvision.transforms as transforms
 import matplotlib.pyplot as plt 
-from torch.utils.data import Dataset,DataLoader
 
 
 class BaseClass:
@@ -35,21 +30,22 @@ class BaseClass:
 class Generator(nn.Module):
     def __init__(self,laten_dim=10,im_dim=784):
         super(Generator, self).__init__()
-
-        self.model = nn.Sequential(
-            *self.block(laten_dim, 128, normalize=False),
-            *self.block(128, 256),
-            *self.block(256, 512),
-            *self.block(512, 1024),
-            nn.Linear(1024,im_dim),
-            nn.Tanh()
-        )
-    def block(in_feat, out_feat, normalize=True):
+        def block(in_feat, out_feat, normalize=True):
             layers = [nn.Linear(in_feat, out_feat)]
             if normalize:
                 layers.append(nn.BatchNorm1d(out_feat, 0.8))
             layers.append(nn.LeakyReLU(0.2, inplace=True))
             return layers
+        
+        self.model = nn.Sequential(
+            *block(laten_dim, 128, normalize=False),
+            *block(128, 256),
+            *block(256, 512),
+            *block(512, 1024),
+            nn.Linear(1024,im_dim),
+            nn.Tanh()
+        )
+    
 
     def forward(self, z):
         img = self.model(z)
@@ -82,7 +78,7 @@ class GANTrain(BaseClass):
         self.discriminator = Discriminator(self.out_latendim,1).to(self.device)
         self.mean_generator_loss = []
         self.mean_discriminator_loss = []
-    def create_folder(folder_name):
+    def create_dir(self,folder_name):
         if not os.path.exists(folder_name):
             os.makedirs(folder_name)
             print(f"Created folder: {folder_name}")
@@ -97,13 +93,13 @@ class GANTrain(BaseClass):
         adversarial_loss = torch.nn.BCELoss()
         self.mean_discriminator_loss = []
         self.mean_generator_loss = []
-        self.create_folder('model_weights')
+        self.create_dir("model")
         for e in range(epoch):
             disc_loss_track = []
             gen_loss_track = []
-            for imgs in enumerate(dataloader):
-                cur_batch_size = len(imgs.shape)
-                imgs = imgs.view(cur_batch_size, -1).to(self.device)
+            for i,imgs in enumerate(dataloader):
+                cur_batch_size = len(imgs.view(-1))
+                imgs = imgs.view(-1).to(self.device)
                 
                 # Train Discriminator
                 optimizer_D.zero_grad()
@@ -141,7 +137,7 @@ class GANTrain(BaseClass):
         
 
         
-    def get_noise(n_samples,z_dim,device='cpu'):
+    def get_noise(self,n_samples,z_dim,device='cpu'):
         noise = torch.randn(n_samples,z_dim,device=device)
         return noise
     
