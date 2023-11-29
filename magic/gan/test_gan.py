@@ -25,7 +25,7 @@ class CustomDataset(Dataset):
     
     def __getitem__(self,idx):
         img = self.data[idx]
-        return img
+        return img.to(torch.float)
 
 cdata = CustomDataset(x) # It's create becuse I only accept actual image not any label.
 dataloader = DataLoader(

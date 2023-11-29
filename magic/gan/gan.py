@@ -135,8 +135,6 @@ class GANTrain(BaseClass):
             torch.save(self.generator.state_dict(),f="model_weights/generator.pth")
             torch.save(self.discriminator.state_dict(),f="model_weights/discriminator.pth")
         
-
-        
     def get_noise(self,n_samples,z_dim,device='cpu'):
         noise = torch.randn(n_samples,z_dim,device=device)
         return noise
