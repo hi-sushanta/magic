@@ -2,30 +2,9 @@
 import torch.nn as nn
 import torch
 import os
-import matplotlib.pyplot as plt 
-
-
-class BaseClass:
-    def __init__(self):
-        self.fig = None 
-        self.ax = None 
-        
-    def loss_plot(self,epoch:int,loss:float,title:str,label_loss:str,last_epoch:int,sign:str):
-         # Create a new figure if needed
-        if self.fig is None:
-            self.fig, self.ax = plt.subplots()
-
-        # Add the current loss to the plot
-        self.fig.suptitle(title)
-        self.ax.set_xlabel('Epoch')
-        self.ax.set_ylabel(label_loss)
-        self.ax.plot(epoch, loss, sign)
-
-        # Update the plot
-        plt.draw()
-        plt.pause(0.01)
-        if epoch+1 == last_epoch:
-            plt.show()
+from magic.utils import BaseClass
+from tqdm import tqdm
+import numpy as np
 
 class Generator(nn.Module):
     def __init__(self,laten_dim=10,im_dim=784):
@@ -67,7 +46,7 @@ class Discriminator(nn.Module):
          return validity
   
 class GANTrain(BaseClass):
-    def __init__(self,laten_dim,img_shape=(1,28,28),batch_size=1,num_workers=1):
+    def __init__(self,laten_dim,img_shape=(1,28,28),batch_size=1):
 
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.img_shape = img_shape
@@ -97,7 +76,7 @@ class GANTrain(BaseClass):
         for e in range(epoch):
             disc_loss_track = []
             gen_loss_track = []
-            for i,imgs in enumerate(dataloader):
+            for imgs in tqdm(dataloader):
                 cur_batch_size = len(imgs.view(-1))
                 imgs = imgs.view(-1).to(self.device)
                 

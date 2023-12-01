@@ -1,10 +1,7 @@
-
-import torchvision.transforms as transforms
-
-from torch.utils.data import DataLoader,Dataset
-from torchvision import datasets
+from torchvision import transforms,datasets
+from torch.utils.data import Dataset,DataLoader
+from magic.dcgan import GANTrain
 import torch
-from magic.gan import GANTrain
 data =  datasets.MNIST(
         "./data/",
         train=True,
@@ -12,11 +9,9 @@ data =  datasets.MNIST(
         transform=transforms.Compose(
             [transforms.ToTensor(), transforms.Normalize([0.5], [0.5])]
         )
-        
     )
 
 x = data.data[:50]
-
 
 class CustomDataset(Dataset):
     def __init__(self,data):
@@ -25,7 +20,8 @@ class CustomDataset(Dataset):
         return len(self.data)
     
     def __getitem__(self,idx):
-        img = self.data[idx]
+        img = self.data[idx].unsqueeze(dim=0)
+        img = transforms.RandomResizedCrop((64,64),antialias=True)(img)
         return img.to(torch.float)
 
 cdata = CustomDataset(x) # It's create becuse I only accept actual image not any label.
@@ -35,7 +31,6 @@ dataloader = DataLoader(
     shuffle=True,
 )
 
-item = next(iter(dataloader))
-gan_train = GANTrain(laten_dim=28,batch_size=32)
 
-gan_train.train(dataloader)
+gantrain = GANTrain(1,64)
+gantrain.train(dataloader)

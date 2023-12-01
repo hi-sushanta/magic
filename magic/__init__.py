@@ -1,0 +1,1 @@
+from magic.utils import BaseClass
