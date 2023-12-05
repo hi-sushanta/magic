@@ -1,1 +1,1 @@
-from dcgan import GANTrain
+from dcgan import DCGANTrain

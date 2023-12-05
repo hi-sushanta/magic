@@ -4,16 +4,15 @@ import torchvision.transforms as transforms
 from torch.utils.data import DataLoader,Dataset
 from torchvision import datasets
 import torch
-from magic.gan import GANTrain
+from magic.wgan import WGanTrain
+
 data =  datasets.MNIST(
         "./data/",
         train=True,
         download=True, 
         transform=transforms.Compose(
-            [transforms.ToTensor(), transforms.Normalize([0.5], [0.5])]
+            [transforms.ToTensor(), transforms.Normalize([0.5], [0.5])])
         )
-        
-    )
 
 
 class CustomDataset(Dataset):
@@ -33,9 +32,8 @@ dataloader = DataLoader(
     shuffle=True,
 )
 
-# item = next(iter(dataloader))
-# print(item.shape)
-gan_train = GANTrain(laten_dim=10,img_shape=(1,28,28),batch_size=32)
-gan_train.train(dataloader)
+
+wgan_train = WGanTrain(in_chan=1,img_dim=28,batch_size=32)
+wgan_train.train(dataloader)
 # Pretrain Model weight load
-# gen, disc = gan_train.load_model(gpath="model_weights\gen.pth",dpath="model_weights\disc.pth")
+# gen, critic = wgan_train.load_model(gpath="model_weights\wgen.pth",dpath="model_weights\wcritic.pth")

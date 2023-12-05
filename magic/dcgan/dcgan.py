@@ -95,15 +95,15 @@ class Discriminator(nn.Module):
         disc_pred = self.disc(image)
         return disc_pred.view(len(disc_pred), -1)
 
-class GANTrain(BaseClass):
-    def __init__(self,out_chan,img_dim):
+class DCGANTrain(BaseClass):
+    def __init__(self,in_chan,img_dim):
         super().__init__()
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
-        self.out_chan = out_chan
+        self.in_chan = in_chan
         self.img_dim = img_dim
-        self.generator = Generator(self.out_chan,
-                                   self.img_dim).to(self.device)
-        self.discriminator = Discriminator(self.out_chan,self.img_dim).to(self.device)
+        self.generator = nn.DataParallel(Generator(self.in_chan,
+                                   self.img_dim).to(self.device))
+        self.discriminator = nn.DataParallel(Discriminator(self.in_chan,self.img_dim).to(self.device))
         self.generator.apply(weights_init_normal)
         self.discriminator.apply(weights_init_normal)
         self.mean_generator_loss = []
@@ -115,7 +115,8 @@ class GANTrain(BaseClass):
         else:
             print(f"Folder already exists: {folder_name}")
 
-    def train(self,dataloader,epoch=100,lr=0.0001,betas=(0.9,0.999)):
+    def train(self,dataloader,epoch=100,lr=0.0001,betas=(0.9,0.999),
+              gen_name='gen.pth',disc_name="disc.pth"):
         optimizer_G = torch.optim.Adam(self.generator.parameters(), lr=lr, 
                                        betas=betas)
         optimizer_D = torch.optim.Adam(self.discriminator.parameters(), lr=lr, 
@@ -159,8 +160,8 @@ class GANTrain(BaseClass):
             super().loss_plot(e+1,self.mean_generator_loss[e],self.mean_discriminator_loss[e],title="Model Tracking",
                            label_loss="Loss",last_epoch=epoch,
                            sign="o",gcolor="green",dcolor='red')
-            torch.save(self.generator.state_dict(),f="model_weights/generator.pth")
-            torch.save(self.discriminator.state_dict(),f="model_weights/discriminator.pth")
+            torch.save(self.generator.state_dict(),f="model_weights/"+gen_name)
+            torch.save(self.discriminator.state_dict(),f="model_weights/"+disc_name)
     def get_noise(self,n_samples,z_dim,device='cpu'):
         noise = torch.randn(n_samples,z_dim,device=device)
         return noise
