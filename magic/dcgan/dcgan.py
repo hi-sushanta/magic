@@ -1,11 +1,9 @@
 import torch.nn as nn
 import torch.nn.functional as F
 import torch
-import os
 from magic.utils import BaseClass
 from tqdm import tqdm 
-import numpy as np
-import matplotlib.pyplot as plt
+
 def weights_init_normal(m):
     classname = m.__class__.__name__
     if classname.find("Conv") != -1:
@@ -82,7 +80,6 @@ class Discriminator(nn.Module):
         else: # Final Layer
             return nn.Sequential(
                 nn.Conv2d(input_channels,output_channels,kernel_size,stride),
-                nn.Sigmoid()
             )
 
     '''
@@ -108,12 +105,6 @@ class DCGANTrain(BaseClass):
         self.discriminator.apply(weights_init_normal)
         self.mean_generator_loss = []
         self.mean_discriminator_loss = []
-    def create_dir(self,folder_name):
-        if not os.path.exists(folder_name):
-            os.makedirs(folder_name)
-            print(f"Created folder: {folder_name}")
-        else:
-            print(f"Folder already exists: {folder_name}")
 
     def train(self,dataloader,epoch=100,lr=0.0001,betas=(0.9,0.999),
               gen_name='gen.pth',disc_name="disc.pth"):
@@ -121,10 +112,10 @@ class DCGANTrain(BaseClass):
                                        betas=betas)
         optimizer_D = torch.optim.Adam(self.discriminator.parameters(), lr=lr, 
                                        betas=betas)
-        adversarial_loss = torch.nn.BCELoss()
+        adversarial_loss = torch.nn.BCEWithLogitsLoss()
         self.mean_discriminator_loss = []
         self.mean_generator_loss = []
-        self.create_dir("model_weights")
+        super().create_dir("model_weights")
         for e in range(epoch):
             disc_loss_track = []
             gen_loss_track = []
@@ -162,6 +153,7 @@ class DCGANTrain(BaseClass):
                            sign="o",gcolor="green",dcolor='red')
             torch.save(self.generator.state_dict(),f="model_weights/"+gen_name)
             torch.save(self.discriminator.state_dict(),f="model_weights/"+disc_name)
+            
     def get_noise(self,n_samples,z_dim,device='cpu'):
         noise = torch.randn(n_samples,z_dim,device=device)
         return noise
@@ -172,6 +164,11 @@ class DCGANTrain(BaseClass):
         disc_state = torch.load(dpath)
         self.discriminator.load_state_dict(disc_state)
         return self.generator,self.discriminator
+    
+    def sample(self):
+       noise = self.get_noise(4,self.img_dim,device=self.device)
+       fake_img = self.generator(noise)
+       super().show_tensor_images(fake_img)
     
 
 

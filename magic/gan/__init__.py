@@ -1,1 +1,1 @@
-from gan import GANTrain
+from .gan import GANTrain

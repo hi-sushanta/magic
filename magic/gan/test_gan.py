@@ -35,7 +35,10 @@ dataloader = DataLoader(
 
 # item = next(iter(dataloader))
 # print(item.shape)
-gan_train = GANTrain(laten_dim=10,img_shape=(1,28,28),batch_size=32)
+gan_train = GANTrain(laten_dim=10,img_shape=(1,64,64),batch_size=32)
 gan_train.train(dataloader)
 # Pretrain Model weight load
 # gen, disc = gan_train.load_model(gpath="model_weights\gen.pth",dpath="model_weights\disc.pth")
+
+# Sample method 
+# gan_train.sample()

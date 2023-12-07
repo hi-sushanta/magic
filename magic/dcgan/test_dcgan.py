@@ -5,7 +5,7 @@ import torch
 
 data =  datasets.MNIST(
         "./data/",
-        train=True,
+        train=False,
         download=True, 
         transform=transforms.Compose(
             [transforms.ToTensor(), transforms.Normalize([0.5], [0.5])]
@@ -32,3 +32,5 @@ dataloader = DataLoader(
 
 gantrain = DCGANTrain(1,28)
 gantrain.train(dataloader)
+# Down method using to when your model training is complete to get generate image.
+# gantrain.sample()

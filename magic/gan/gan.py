@@ -5,6 +5,7 @@ import os
 from magic.utils import BaseClass
 from tqdm import tqdm
 from  torch.nn import functional as F
+
 class Generator(nn.Module):
   def __init__(self,z_dim=10,im_shape=(1,64,64),hidden_dim=128,batch_size=1):
     super(Generator,self).__init__()
@@ -16,7 +17,8 @@ class Generator(nn.Module):
         self.get_generator_block(hidden_dim,hidden_dim*2),
         self.get_generator_block(hidden_dim*2,hidden_dim*4),
         self.get_generator_block(hidden_dim*4,hidden_dim*8),
-        nn.Linear(hidden_dim*8,self.img_dim)
+        nn.Linear(hidden_dim*8,self.img_dim),
+        nn.Tanh()
     )  
   def get_generator_block(self,input_dim,output_dim):
     return nn.Sequential(nn.Linear(input_dim,output_dim),
@@ -62,13 +64,7 @@ class GANTrain(BaseClass):
         self.discriminator = Discriminator(self.img_shape,batch_size=batch_size).to(self.device)
         self.mean_generator_loss = []
         self.mean_discriminator_loss = []
-    def create_dir(self,folder_name):
-        if not os.path.exists(folder_name):
-            os.makedirs(folder_name)
-            print(f"Created folder: {folder_name}")
-        else:
-            print(f"Folder already exists: {folder_name}")
-
+   
     def train(self,dataloader,epoch=100,lr=0.0001,betas=(0.9,0.999),
               gen_name="gen.pth",disc_name="disc.pth"):
         optimizer_G = torch.optim.Adam(self.generator.parameters(), lr=lr, 
@@ -78,7 +74,7 @@ class GANTrain(BaseClass):
         adversarial_loss = torch.nn.BCELoss()
         self.mean_discriminator_loss = []
         self.mean_generator_loss = []
-        self.create_dir("model_weights")
+        super().create_dir("model_weights")
         for e in range(epoch):
             disc_loss_track = []
             gen_loss_track = []
@@ -128,11 +124,10 @@ class GANTrain(BaseClass):
         self.discriminator.load_state_dict(disc_state)
         return self.generator,self.discriminator
     
-
-# gen = Generator(10,im_shape=(1,64,64),batch_size=2)
-# disc = Discriminator(img_shape=(1,64,64),batch_size=2)
-# noise = torch.rand(2,10)
-# output = gen(noise)
-# print(output.shape)
-# doutput = disc(output)
-# print(doutput.shape)
+    def sample(self):
+       noise = self.get_noise(4,self.laten_dim,device=self.device)
+       fake_img = self.generator(noise)
+       super().show_tensor_images(fake_img)
+    
+    
+    

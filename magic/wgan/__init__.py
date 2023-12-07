@@ -1,1 +1,1 @@
-from wgan import WGanTrain
+from .wgan import WGanTrain
