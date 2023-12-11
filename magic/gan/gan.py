@@ -58,10 +58,10 @@ class GANTrain(BaseClass):
         self.img_shape = img_shape
         self.laten_dim = laten_dim
         self.batch_size = batch_size
-        self.generator = Generator(self.laten_dim,
+        self.generator = nn.DataParallel(Generator(self.laten_dim,
                                    self.img_shape,
-                                   batch_size=batch_size).to(self.device)
-        self.discriminator = Discriminator(self.img_shape,batch_size=batch_size).to(self.device)
+                                   batch_size=batch_size).to(self.device))
+        self.discriminator = nn.DataParallel(Discriminator(self.img_shape,batch_size=batch_size).to(self.device))
         self.mean_generator_loss = []
         self.mean_discriminator_loss = []
    

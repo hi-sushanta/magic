@@ -1,10 +1,9 @@
-
 import torchvision.transforms as transforms
 
 from torch.utils.data import DataLoader,Dataset
 from torchvision import datasets
 import torch
-from magic.pix2pix import Pix2Pix
+from magic.cyclegan import CycleGan
 
 data =  datasets.MNIST(
         "./data/",
@@ -28,7 +27,7 @@ class CustomDataset(Dataset):
 
 # It's just demo purpose to using this dataset.
 # but your case must be need src image with targeted image.
-cdata = CustomDataset(data.data[:32]) 
+cdata = CustomDataset(data.data)
 dataloader = DataLoader(
     cdata,
     batch_size=32,
@@ -36,6 +35,7 @@ dataloader = DataLoader(
 )
 
 item = next(iter(dataloader))
-pix_train = Pix2Pix(in_chan=1)
-pix_train.train(dataloader)
-# pix_train.sample(item[0][0].unsqueeze(dim=0))
+# In my case using single channel image, but you can also try three channels image.
+cycle_train = CycleGan(input_channels=1)
+cycle_train.train(dataloader)
+# cycle_train.sample(item[0][0].unsqueeze(dim=0))
