@@ -4,27 +4,14 @@ import os
 
 class BaseClass:
     def __init__(self,):
-        self.fig,self.ax = plt.subplots()
-        
-    def loss_plot(self,epoch:int,gloss:float,dloss:float,title:str,label_loss:str,last_epoch:int,sign:str,gcolor="green",
-                  dcolor='red'):
-        # Add the current loss to the plot
-        self.fig.suptitle(title)
-        self.ax.set_xlabel('Epoch')
-        self.ax.set_ylabel(label_loss)
-        if epoch == 1:
-            self.ax.plot(epoch, gloss, sign,color=gcolor,label="Generator")
-            self.ax.plot(epoch,dloss,sign,color=dcolor,label="Discriminator")
-            plt.legend()
-
-        else:
-            self.ax.plot(epoch,gloss,sign,color=gcolor)
-            self.ax.plot(epoch,dloss,sign,color=dcolor)
-        
-        plt.draw()
-        plt.pause(0.01)
-        if epoch+1 == last_epoch:
-            plt.show()
+        pass
+    
+    def print_loss(self,epoch:int,gloss:float,dloss:float,glabel:str="Generator",dlabel:str="Discriminator"):
+        print("\t========<>=============<>==============<>=========")
+        print(f"\tEpoch:{epoch}")
+        print(f"\t{glabel} Loss: {gloss}")
+        print(f"\t{dlabel} Loss: {dloss}")
+        print(f"\t========<>=============<>==============<>=========")
     
     def show_tensor_images(self,image_tensor, num_images = 4,nrows=2,show=True):
       '''

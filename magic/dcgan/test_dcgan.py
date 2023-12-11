@@ -22,7 +22,7 @@ class CustomDataset(Dataset):
         img = self.data[idx].unsqueeze(dim=0)
         return img.to(torch.float)
 
-cdata = CustomDataset(data.data) # It's create becuse I only accept actual image not any label.
+cdata = CustomDataset(data.data[:64]) # It's create becuse I only accept actual image not any label.
 dataloader = DataLoader(
     cdata,
     batch_size=16,

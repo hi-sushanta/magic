@@ -152,10 +152,9 @@ class Discriminator(nn.Module):
 
 
 
-class Pix2Pix:
+class Pix2Pix(BaseClass):
     def __init__(self,in_chan):
         super().__init__()
-        self.base = BaseClass()
         self.in_chan = in_chan
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.generator = nn.DataParallel(Generator(in_chan).to(self.device))
@@ -170,7 +169,7 @@ class Pix2Pix:
         bc_loss = nn.BCELoss()
         self.mean_discriminator_loss = []
         self.mean_generator_loss = []
-        self.base.create_dir("model_weights")
+        super().create_dir("model_weights")
         for e in range(epoch):
            gen_loss_track = []
            disc_loss_track = []
@@ -201,9 +200,7 @@ class Pix2Pix:
         
            self.mean_generator_loss.append(sum(gen_loss_track)/len(dataloader))
            self.mean_discriminator_loss.append(sum(disc_loss_track)/len(dataloader))
-           self.base.loss_plot(e+1,self.mean_generator_loss[e],self.mean_discriminator_loss[e],title="Model Tracking",
-                           label_loss="Loss",last_epoch=epoch,
-                           sign="o",gcolor='green',dcolor='red')
+           super().print_loss(e+1,self.mean_generator_loss[e],self.mean_discriminator_loss[e])
            torch.save(self.generator.state_dict(),f="model_weights/"+gen_name)
            torch.save(self.disc.state_dict(),f="model_weights/"+crit_name)
     

@@ -27,7 +27,7 @@ class CustomDataset(Dataset):
         return img.to(torch.float),timg.to(torch.float)
 
 # It's just demo purpose to using this dataset.
-# but your case must be need src image with targeted image.
+# but your case must be used src image with targated image.
 cdata = CustomDataset(data.data[:32]) 
 dataloader = DataLoader(
     cdata,
