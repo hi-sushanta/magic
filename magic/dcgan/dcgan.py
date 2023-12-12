@@ -107,7 +107,7 @@ class DCGANTrain(BaseClass):
         self.mean_discriminator_loss = []
 
     def train(self,dataloader,epoch=100,lr=0.0001,betas=(0.9,0.999),
-              gen_name='gen.pth',disc_name="disc.pth"):
+              gen_name='DCgen.pth',disc_name="DCdisc.pth"):
         optimizer_G = torch.optim.Adam(self.generator.parameters(), lr=lr, 
                                        betas=betas)
         optimizer_D = torch.optim.Adam(self.discriminator.parameters(), lr=lr, 
@@ -148,9 +148,8 @@ class DCGANTrain(BaseClass):
                 optimizer_G.step()
             self.mean_discriminator_loss.append(sum(disc_loss_track)/len(dataloader))
             self.mean_generator_loss.append(sum(gen_loss_track)/len(dataloader))
-            super().loss_plot(e+1,self.mean_generator_loss[e],self.mean_discriminator_loss[e],title="Model Tracking",
-                           label_loss="Loss",last_epoch=epoch,
-                           sign="o",gcolor="green",dcolor='red')
+            super().print_loss(e+1,self.mean_generator_loss[e],self.mean_discriminator_loss[e],dlabel="Discriminator")
+
             torch.save(self.generator.state_dict(),f="model_weights/"+gen_name)
             torch.save(self.discriminator.state_dict(),f="model_weights/"+disc_name)
             

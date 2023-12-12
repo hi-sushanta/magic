@@ -168,9 +168,8 @@ class WGanTrain(BaseClass):
             
             self.mean_generator_loss.append(sum(gen_loss_track)/len(dataloader))
             self.mean_critic_loss.append(sum(crit_loss_track)/len(dataloader))
-            super().loss_plot(e+1,self.mean_generator_loss[e],self.mean_critic_loss[e],title="Model Tracking",
-                           label_loss="Loss",last_epoch=epoch,
-                           sign="o",gcolor="green",dcolor='red')
+            super().print_loss(e+1,self.mean_generator_loss[e],self.mean_critic_loss[e],dlabel="Critic")
+
             torch.save(self.generator.state_dict(),f="model_weights/"+gen_name)
             torch.save(self.critic.state_dict(),f="model_weights/"+crit_name)
         

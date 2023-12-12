@@ -8,7 +8,7 @@ from magic.wgan import WGanTrain
 
 data =  datasets.MNIST(
         "./data/",
-        train=True,
+        train=False,
         download=True, 
         transform=transforms.Compose(
             [transforms.ToTensor(), transforms.Normalize([0.5], [0.5])])
@@ -30,6 +30,7 @@ dataloader = DataLoader(
     cdata,
     batch_size=32,
     shuffle=True,
+    drop_last=True
 )
 
 

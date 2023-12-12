@@ -107,9 +107,8 @@ class GANTrain(BaseClass):
 
             self.mean_discriminator_loss.append(sum(disc_loss_track)/len(dataloader))
             self.mean_generator_loss.append(sum(gen_loss_track)/len(dataloader))
-            super().loss_plot(e+1,self.mean_generator_loss[e],self.mean_discriminator_loss[e],title="Model Tracking",
-                           label_loss="Loss",last_epoch=epoch,
-                           sign="o",gcolor='green',dcolor='red')
+            super().print_loss(e+1,self.mean_generator_loss[e],self.mean_discriminator_loss[e],dlabel="Critic")
+
             torch.save(self.generator.state_dict(),f="model_weights/"+gen_name)
             torch.save(self.discriminator.state_dict(),f="model_weights/"+disc_name)
         

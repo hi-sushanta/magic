@@ -261,9 +261,8 @@ class CycleGan(BaseClass):
             
             self.generator_loss.append(sum(gen_loss_track)/len(dataloader))
             self.discriminator_loss.append(sum(disc_loss_track)/len(dataloader))
-            super().loss_plot(e+1,self.generator_loss[e],self.discriminator_loss[e],title="Model Tracking",
-                           label_loss="Loss",last_epoch=epoch,
-                           sign="o",gcolor='green',dcolor='red')
+            super().print_loss(e+1,self.generator_loss[e],self.discriminator_loss[e],dlabel="Critic")
+
             torch.save(self.generatorAB.state_dict(),f="model_weights/"+gen_name)
             torch.save(self.discA.state_dict(),f="model_weights/"+crit_name)
 

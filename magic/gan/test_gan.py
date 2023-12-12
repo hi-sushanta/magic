@@ -5,9 +5,11 @@ from torch.utils.data import DataLoader,Dataset
 from torchvision import datasets
 import torch
 from magic.gan import GANTrain
+
+# Testing Dataset Using not training data.
 data =  datasets.MNIST(
         "./data/",
-        train=True,
+        train=False,
         download=True, 
         transform=transforms.Compose(
             [transforms.ToTensor(), transforms.Normalize([0.5], [0.5])]
@@ -31,11 +33,12 @@ dataloader = DataLoader(
     cdata,
     batch_size=32,
     shuffle=True,
+    drop_last=True
 )
 
 # item = next(iter(dataloader))
 # print(item.shape)
-gan_train = GANTrain(laten_dim=10,img_shape=(1,64,64),batch_size=32)
+gan_train = GANTrain(laten_dim=28,img_shape=(1,28,28),batch_size=32)
 gan_train.train(dataloader)
 # Pretrain Model weight load
 # gen, disc = gan_train.load_model(gpath="model_weights\gen.pth",dpath="model_weights\disc.pth")
