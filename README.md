@@ -1,2 +1,2 @@
 # Magic
-One package open your gate to using different type GAN Network.
+One package opens your gate to using different types of GAN Network.
