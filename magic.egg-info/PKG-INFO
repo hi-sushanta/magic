@@ -1,0 +1,13 @@
+Metadata-Version: 2.1
+Name: magic
+Version: 0.0.1
+Summary: One package open your gate to using different type of GAN
+Author: Sushanta Das
+Author-email: <imachi@skiff.com>
+Keywords: python,GAN,Generative adversarial networks,scikit-learn,machine learning,deep learning,Computer Vision,Artificial intelligence
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+
+# Magic
+One package open your gate to using different type GAN Network.
