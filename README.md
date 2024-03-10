@@ -10,10 +10,16 @@ Like:
  6. Cycle Gan
 
 ## How To Use This Library.
-***First clone Repo:*** ```git clone git@github.com:hi-sushanta/magic.git```
+***First: clone Repo:*** 
+```
+git clone git@github.com:hi-sushanta/magic.git
+```
 
-***Second Go to magic folder***
+***Second: Go to magic folder***
 
-***Third install the magic library into your local machine:*** ```pip install dist *```
+***Third: Install the magic library into your local machine:*** 
+```
+pip install dist
+```
 
-***Fourth now it is time to use this library.***
+***Fourth: now it is time to use this library.***
