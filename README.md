@@ -10,7 +10,7 @@ Like:
  6. Cycle Gan
 
 ## How To Use This Library.
-***First: clone Repo:*** 
+***First: clone Repo*** 
 ```
 git clone git@github.com:hi-sushanta/magic.git
 ```
