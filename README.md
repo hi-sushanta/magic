@@ -1,5 +1,6 @@
 # Magic
 One package opens your gate to using different types of GAN Network.
+but now it's only capable of handling 6 types of GAN so don't worry Later on I added more GAN Networks.
 
 Like: 
  1. Simple Gan.
