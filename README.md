@@ -24,3 +24,6 @@ pip install dist
 ```
 
 ***Fourth: now it is time to use this library.***
+```
+import magic
+```
