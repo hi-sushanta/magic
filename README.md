@@ -28,4 +28,5 @@ pip install dist
 import magic
 ```
 
-> ***Note🗝️:***  I create each test for every GAN network to explain How to use this library. Please first check out then use it's a lot easier for you.
+
+>***Note🧐:*** Want to master this powerful GAN library? No sweat! I've created comprehensive tests for every network, offering a clear roadmap to get you started. Check them out first - they'll make using the library a breeze!
